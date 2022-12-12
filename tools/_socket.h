@@ -3,6 +3,9 @@
 #include <string.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
+#include <cassert>
+#include <fcntl.h>
+
 namespace dya
 {
 ////////////////////////////////////////////////////////////////////
@@ -14,8 +17,10 @@ public :
 public :
 	//空白，给accept当参数
 	InetAddress();
+
 	//给listen或connect当参数
 	InetAddress(const char *ip, int port);
+
 	~InetAddress();
 };
 ////////////////////////////////////////////////////////////////////
@@ -29,12 +34,19 @@ public :
 	Socket();
 	~Socket();
 public :
-	bool bind(InetAddress &inetAddr);
+	void bind(InetAddress &inetAddr);
+
 	void listen();
-	bool connect(InetAddress &inetAddr);
+
+	void connect(InetAddress &inetAddr);
+
+	//返回fd
 	int getfd();
+
 	int accept(InetAddress &inetAddr);
-	void setNonBlack();
+
+	//将socket设置成非阻塞
+	void setNonBlock();
 };
 ////////////////////////////////////////////////////////////////////
 }

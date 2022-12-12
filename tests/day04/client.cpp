@@ -8,7 +8,7 @@ int main()
 	dya::InetAddress local("192.168.45.128", 5001);
 	dya::Socket conn;
 
-	assert(conn.connect(local));
+	conn.connect(local);
 
 	char buff[100] = {0};
 	strcpy(buff, "this is client");

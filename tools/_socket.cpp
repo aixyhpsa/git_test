@@ -3,19 +3,16 @@
 namespace dya
 {
 ////////////////////////////////////////////////////////////////////
-Socket::Socket():m_fd(-1) {}
+Socket::Socket() { m_fd = socket(AF_INET, SOCK_STREAM, 0); }
 
 Socket::~Socket() {}
 
 int Socket::getfd() { return m_fd; }
 
-bool Socket::bind(InetAddress &inetAddr) 
+void Socket::bind(InetAddress &inetAddr) 
 {
-	m_fd = socket(AF_INET, SOCK_STREAM, 0);
-	if (m_fd == -1)
-		return false;
+	assert(m_fd != -1);
 	::bind(m_fd, (sockaddr *)&inetAddr.m_addr, inetAddr.m_len);
-	return true;
 }
 
 void Socket::listen()
@@ -23,18 +20,20 @@ void Socket::listen()
 	::listen(m_fd, SOMAXCONN);
 }
 
-bool Socket::connect(InetAddress &inetAddr)
+void Socket::connect(InetAddress &inetAddr)
 {
-	m_fd = socket(AF_INET, SOCK_STREAM, 0);
-	if (m_fd == -1)
-		return false;
+	assert(m_fd != -1);
 	::connect(m_fd, (sockaddr *)&inetAddr.m_addr, inetAddr.m_len);
-	return true;
 }
 
 int Socket::accept(InetAddress &inetaddr)
 {
 	return ::accept(m_fd, (sockaddr *)&inetaddr.m_addr, &inetaddr.m_len);
+}
+
+void Socket::setNonBlock()
+{
+	fcntl(m_fd, F_SETFL, fcntl(m_fd, F_GETFL) | O_NONBLOCK);
 }
 ////////////////////////////////////////////////////////////////////
 
