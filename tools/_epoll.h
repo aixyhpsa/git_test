@@ -5,8 +5,7 @@
 #include <sys/epoll.h>
 #include <string.h>
 
-#define TIMEOUT -1
-#define EVMAX 10
+#define EVMAX 20
 
 namespace dya
 {
@@ -21,7 +20,7 @@ public :
 	~Epoll();
 public :
 	void addfd(int fd);
-	void poll(std::vector<struct epoll_event> &events);
+	std::vector<struct epoll_event> poll();
 };
 
 }
