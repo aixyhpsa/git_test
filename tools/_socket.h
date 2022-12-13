@@ -32,6 +32,7 @@ private :
 	int m_fd;
 public :
 	Socket();
+	Socket(int fd);
 	~Socket();
 public :
 	void bind(InetAddress &inetAddr);

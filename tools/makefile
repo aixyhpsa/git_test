@@ -11,5 +11,5 @@ _epoll.o : _epoll.cpp _epoll.h
 _socket.o : _socket.cpp _socket.h
 	g++ $(std) $(optimize) -c -o _socket.o _socket.cpp
 
-clear :
+clean :
 	rm -f _epoll.o _socket.o

@@ -12,10 +12,11 @@ int main(int argc, char *argv[])
 	listen->listen();
 
 	std::unique_ptr<dya::Epoll> ep(new dya::Epoll);
-	ep->addfd(listen->getfd());
+	ep->addfd(listen->getfd(), EPOLLIN);
 
-	std::string buff;
-	buff.resize(512);
+	const int bplen = 128;
+	std::unique_ptr<char []> bp(new char[bplen]);
+	//std::unique_ptr<dya::InetAddress> remote(new dya::InetAddress);
 	while (true)
 	{
 		auto result = ep->poll();
@@ -23,19 +24,23 @@ int main(int argc, char *argv[])
 		{
 			if (result[i].data.fd == listen->getfd())
 			{
-				std::unique_ptr<dya::InetAddress> remote(new dya::InetAddress);
-				//dya::InetAddress remote;
-				int client = listen->accept(*remote);
+				dya::InetAddress remote;
+				int client = listen->accept(remote);
 				if (client == -1) continue;
-			ep->addfd(client);
+				ep->addfd(client, EPOLLIN);
 			}
 			else
 			{
-				buff.clear();
-				recv(result[i].data.fd, (char *)buff.c_str(), buff.capacity(), 0);
-				std::cout << buff << "\n";
-				buff = "OK hello client";
-				send(result[i].data.fd, buff.c_str(), buff.size(), 0);
+				memset((char *)bp.get(), 0, bplen);
+				int count = recv(result[i].data.fd, (char *)bp.get(), bplen, 0);
+				if (count <= 0)
+				{
+					close(result[i].data.fd);
+					continue;
+				}
+				puts(bp.get());
+				strcpy((char *)bp.get(), "OK hello client");
+				send(result[i].data.fd, bp.get(),strlen(bp.get()), 0);
 			}
 
 		}

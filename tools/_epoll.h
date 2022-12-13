@@ -4,6 +4,7 @@
 #include <vector>
 #include <sys/epoll.h>
 #include <string.h>
+#include <unistd.h>
 
 #define EVMAX 20
 
@@ -14,13 +15,13 @@ class Epoll
 {
 private :
 	int m_epfd;
-	struct epoll_event m_ev;
+	struct epoll_event *m_evs;
 public :
 	Epoll();
 	~Epoll();
 public :
-	void addfd(int fd);
-	std::vector<struct epoll_event> poll();
+	void addfd(int fd, uint32_t op);
+	std::vector<struct epoll_event> poll(int timeout = -1);
 };
 
 }

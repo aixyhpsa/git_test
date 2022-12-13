@@ -5,6 +5,8 @@ namespace dya
 ////////////////////////////////////////////////////////////////////
 Socket::Socket() { m_fd = socket(AF_INET, SOCK_STREAM, 0); }
 
+Socket::Socket(int fd) { m_fd = fd; }
+
 Socket::~Socket() {}
 
 int Socket::getfd() { return m_fd; }
