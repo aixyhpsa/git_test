@@ -5,12 +5,13 @@
 #include <sys/epoll.h>
 #include <string.h>
 #include <unistd.h>
-
+#include "_channel.h"
 #define EVMAX 20
 
 namespace dya
 {
-
+//////////////////////////////////////////////////////////////
+class Channel;
 class Epoll
 {
 private :
@@ -21,8 +22,10 @@ public :
 	~Epoll();
 public :
 	void addfd(int fd, uint32_t op);
-	std::vector<struct epoll_event> poll(int timeout = -1);
+	//std::vector<struct epoll_event> poll(int timeout = -1);
+    std::vector<Channel *> poll(int timeout = -1);
+    void updataChannel(Channel &ch);
 };
-
+//////////////////////////////////////////////////////////////
 }
 #endif
