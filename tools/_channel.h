@@ -19,6 +19,7 @@ public :
 	  Channel(Epoll &ep, int fd);
 	  ~Channel();
 public :
+	  void handleEvent();
 	  void enableReading();
 	  int getfd();
 	  uint32_t getEvents();
